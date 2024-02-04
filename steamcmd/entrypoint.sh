@@ -79,28 +79,6 @@ else
     echo -e "Not updating game server as auto update was set to 0. Starting Server"
 fi
 
-# Check for PalworldServerConfigParser and install if needed
-if [[ ! -f /home/container/PalworldServerConfigParser ]]; then
-  echo "Installing PalworldServerConfigParser..."
-  curl -sSL -o PalworldServerConfigParser https://github.com/CuteNatalie/eggs/raw/master/game_eggs/steamcmd_servers/palworld/PalworldServerConfigParser-linux-amd64
-  chmod +x PalworldServerConfigParser
-else
-  echo "PalworldServerConfigParser already installed. Skipping..."
-fi
-
-# Check for Modding Framework files and install if needed
-if [[ ! -f /home/container/Pal/Binaries/Win64/winmm.dll ]]; then
-  echo "Setting up Modding Framework..."
-  cd /tmp
-  curl -sSL -o winmm.zip https://cdn.discordapp.com/attachments/1107095082567471114/1200053412126003250/winmm.zip
-  unzip -o winmm.zip -d /home/container/Pal/Binaries/Win64
-  curl -sSL -o ue4ss.zip https://github.com/UE4SS-RE/RE-UE4SS/releases/download/experimental/zDEV-UE4SS_v2.5.2-594-gc053439.zip
-  unzip -o ue4ss.zip -d /home/container/Pal/Binaries/Win64
-  cd /home/container
-else
-  echo "Modding Framework already installed. Skipping..."
-fi
-
 
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
