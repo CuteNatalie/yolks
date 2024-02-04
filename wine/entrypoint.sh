@@ -76,6 +76,23 @@ if [[ $WINETRICKS_RUN =~ mono ]]; then
         wine msiexec /i $WINEPREFIX/mono.msi /qn /quiet /norestart /log $WINEPREFIX/mono_install.log
 fi
 
+# Check if VC++ 2022 Redistributable is already installed
+if wine regedit /E /L "$WINEPREFIX/reg.reg" && grep -q "Microsoft Visual C++ 2022" "$WINEPREFIX/reg.reg"; then
+    echo "Microsoft Visual C++ 2022 Redistributable is already installed."
+else
+    # Download the appropriate VC++ 2022 Redistributable installer
+    arch=$(wine winecfg | grep "Windows Version" | grep -oP '\d+')
+    url="https://aka.ms/vs/17/release/vc_redist.x64.exe" # Official link for latest version
+    wget -q -O "$WINEPREFIX/vcredist2022.exe" "$url"
+
+    # Install VC++ 2022 Redistributable silently, logging any errors
+    wine msiexec /i "$WINEPREFIX/vcredist2022.exe" /qn /norestart /log "$WINEPREFIX/vcredist2022_install.log" || {
+        echo "Error installing Microsoft Visual C++ 2022 Redistributable."
+        cat "$WINEPREFIX/vcredist2022_install.log"
+        exit 1
+    }
+fi
+
 # List and install other packages
 for trick in $WINETRICKS_RUN; do
         echo "Installing $trick"
