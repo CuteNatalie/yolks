@@ -89,13 +89,11 @@ else
 fi
 
 # Check for Modding Framework files and install if needed
-if [[ ! -f /home/container/Pal/Binaries/Win64/winmm.dll ]]; then
+if [[ ! -f /home/container/Pal/Binaries/Win64/PalServerInject.exe ]]; then
   echo "Setting up Modding Framework..."
   cd /tmp
-  curl -sSL -o winmm.zip https://cdn.discordapp.com/attachments/1107095082567471114/1200053412126003250/winmm.zip
-  unzip winmm.zip -d /home/container/Pal/Binaries/Win64
-  curl -sSL -o ue4ss.zip https://github.com/UE4SS-RE/RE-UE4SS/releases/download/experimental/zDEV-UE4SS_v2.5.2-594-gc053439.zip
-  unzip ue4ss.zip -d /home/container/Pal/Binaries/Win64
+  curl -sSL -o PalWorld-ServerInjector.zip https://github.com/N00byKing/PalWorld-ServerInjector/releases/download/v1.2.0/PalWorld-ServerInjector.zip
+  unzip PalWorld-ServerInjector.zip -d /home/container/Pal/Binaries/Win64
   cd /home/container
 else
   echo "Modding Framework already installed. Skipping..."
