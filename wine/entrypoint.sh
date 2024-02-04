@@ -69,19 +69,7 @@ if [[ $WINETRICKS_RUN =~ mono ]]; then
                 wget -q -O $WINEPREFIX/mono.msi https://dl.winehq.org/wine/wine-mono/8.0.0/wine-mono-8.0.0-x86.msi
         fi
 
-        xvfb-run wine msiexec /i $WINEPREFIX/mono.msi /qn /quiet /norestart /log $WINEPREFIX/mono_install.log
-fi
-
-# Check if VC++ 2022 Redistributable is already installed
-if [[ $WINETRICKS_RUN =~ vcrun2022 ]]; then
-		echo "Installing VC++ 2022 Redistributable"
-		WINETRICKS_RUN=${WINETRICKS_RUN/vcrun2022}
-    	
-	 	if [ ! -f "$WINEPREFIX/vcrun2022.exe" ]; then
-                wget -q -O $WINEPREFIX/vcrun2022.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
-        fi
-
-    	xvfb-run wine "$WINEPREFIX/vcrun2022.exe" /passive /quiet
+        wine msiexec /i $WINEPREFIX/mono.msi /qn /quiet /norestart /log $WINEPREFIX/mono_install.log
 fi
 
 # Replace Startup Variables
