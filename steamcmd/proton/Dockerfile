@@ -12,10 +12,26 @@ RUN         apt install -y --no-install-recommends wget iproute2 gnupg2 software
 RUN         apt install -y alsa-tools libpulse0 pulseaudio libpulse-dev libasound2 libao-common gnutls-bin gnupg locales numactl cabextract curl python3 python3-pip python3-setuptools tini file
 RUN         useradd -d /home/container -m container
 
+# Insert Steam prompt answers
+SHELL 		["/bin/bash", "-o", "pipefail", "-c"]
+RUN 		echo steam steam/question select "I AGREE" | debconf-set-selections \
+ 			&& echo steam steam/license note '' | debconf-set-selections
+
+## Download Steamcmd directly into the OS
+RUN 		apt-get update && apt-get install -y software-properties-common
+RUN    		apt-add-repository non-free
+RUN    		apt-get update
+RUN   		apt-get install -y steamcmd
+
+# Create symlink for executable
+RUN 		ln -s /usr/games/steamcmd /usr/bin/steamcmd
+
 # Download Proton GE
 RUN         curl -sLOJ "$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | grep browser_download_url | cut -d\" -f4 | egrep .tar.gz)"
 RUN         tar -xzf GE-Proton*.tar.gz -C /usr/local/bin/ --strip-components=1
 RUN         rm GE-Proton*.*
+RUN			mkdir -p /home/container/.steam/steam/steamapps/compatdata/2394010/
+RUN			cp -a /usr/local/bin/files/share/default_pfx /home/container/.steam/steam/steamapps/compatdata/2394010/
 
 # Proton Fix machine-id
 RUN         rm -f /etc/machine-id
