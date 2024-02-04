@@ -84,14 +84,8 @@ if [[ $WINETRICKS_RUN =~ vcrun2022 ]]; then
                 wget -q -O $WINEPREFIX/vcrun2022.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
         fi
 
-    wine msiexec /i "$WINEPREFIX/vcrun2022 " /qn /norestart /log $WINEPREFIX/vcredist2022_install.log
+    wine msiexec /i "$WINEPREFIX/vcrun2022 " /qn /quiet /norestart /log $WINEPREFIX/vcredist2022_install.log
 fi
-
-# List and install other packages
-for trick in $WINETRICKS_RUN; do
-        echo "Installing $trick"
-        winetricks -q $trick
-done
 
 # Replace Startup Variables
 MODIFIED_STARTUP=$(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')
