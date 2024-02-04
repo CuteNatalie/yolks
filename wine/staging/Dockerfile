@@ -24,6 +24,12 @@ RUN         cd /tmp/ \
             && tar xvf rcon.tar.gz \
             && mv rcon-0.10.3-amd64_linux/rcon /usr/local/bin/
 
+# Install Proton-Ge Wine
+RUN			cd /tmp \
+			&& curl -sSL https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton8-26/wine-lutris-GE-Proton8-26-x86_64.tar.xz > wine-ge.tar.xz \
+   			&& tar xvf wine-ge.tar.xz \
+	  		&& mv lutris-GE-Proton8-26-x86_64/ /usr/local/wine-ge
+
 # Set up Winetricks
 RUN	            wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
                 && chmod +x /usr/sbin/winetricks
@@ -37,6 +43,7 @@ ENV             DISPLAY_HEIGHT=768
 ENV             DISPLAY_DEPTH=16
 ENV             AUTO_UPDATE=1
 ENV             XVFB=1
+ENV				PATH=/usr/local/wine-ge/bin:$PATH
 
 COPY            ./../entrypoint.sh /entrypoint.sh
 CMD             [ "/bin/bash", "/entrypoint.sh" ]
