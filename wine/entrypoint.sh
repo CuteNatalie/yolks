@@ -77,20 +77,14 @@ if [[ $WINETRICKS_RUN =~ mono ]]; then
 fi
 
 # Check if VC++ 2022 Redistributable is already installed
-if wine regedit /E /L "$WINEPREFIX/reg.reg" && grep -q "Microsoft Visual C++ 2022" "$WINEPREFIX/reg.reg"; then
-    echo "Microsoft Visual C++ 2022 Redistributable is already installed."
-else
-    # Download the appropriate VC++ 2022 Redistributable installer
-    arch=$(wine winecfg | grep "Windows Version" | grep -oP '\d+')
-    url="https://aka.ms/vs/17/release/vc_redist.x64.exe" # Official link for latest version
-    wget -q -O "$WINEPREFIX/vcredist2022.exe" "$url"
+if [[ $WINETRICKS_RUN =~ vcrun2022 ]]; then
+	echo "Installing VC++ 2022 Redistributable"
+	WINETRICKS_RUN=${WINETRICKS_RUN/vcrun2022}
+    	if [ ! -f "$WINEPREFIX/vcrun2022.exe" ]; then
+                wget -q -O $WINEPREFIX/vcrun2022.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
+        fi
 
-    # Install VC++ 2022 Redistributable silently, logging any errors
-    wine msiexec /i "$WINEPREFIX/vcredist2022.exe" /qn /norestart /log "$WINEPREFIX/vcredist2022_install.log" || {
-        echo "Error installing Microsoft Visual C++ 2022 Redistributable."
-        cat "$WINEPREFIX/vcredist2022_install.log"
-        exit 1
-    }
+    wine msiexec /i "$WINEPREFIX/vcrun2022 " /qn /norestart /log $WINEPREFIX/vcredist2022_install.log
 fi
 
 # List and install other packages
