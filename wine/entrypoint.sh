@@ -38,6 +38,10 @@ else
     echo -e "Not updating game server as auto update was set to 0. Starting Server"
 fi
 
+if [[ $XVFB == 1 ]]; then
+        Xvfb :0 -screen 0 ${DISPLAY_WIDTH}x${DISPLAY_HEIGHT}x${DISPLAY_DEPTH} &
+fi
+
 # Install necessary to run packages
 echo "First launch will throw some errors. Ignore them"
 
@@ -70,6 +74,18 @@ if [[ $WINETRICKS_RUN =~ mono ]]; then
         fi
 
         wine msiexec /i $WINEPREFIX/mono.msi /qn /quiet /norestart /log $WINEPREFIX/mono_install.log
+fi
+
+# Check if VC++ 2022 Redistributable is already installed
+if [[ ! -f "$WINEPREFIX/vcrun2022.exe" ]]; then
+		echo "Installing VC++ 2022 Redistributable"
+		WINETRICKS_RUN=${WINETRICKS_RUN/vcrun2022}
+    	
+	 	if [ ! -f "$WINEPREFIX/vcrun2022.exe" ]; then
+                wget -q -O $WINEPREFIX/vcrun2022.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
+        fi
+
+    	wine "$WINEPREFIX/vcrun2022.exe" /passive /quiet
 fi
 
 # Replace Startup Variables
