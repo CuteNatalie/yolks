@@ -78,13 +78,14 @@ fi
 
 # Check if VC++ 2022 Redistributable is already installed
 if [[ $WINETRICKS_RUN =~ vcrun2022 ]]; then
-	echo "Installing VC++ 2022 Redistributable"
-	WINETRICKS_RUN=${WINETRICKS_RUN/vcrun2022}
-    	if [ ! -f "$WINEPREFIX/vcrun2022.exe" ]; then
+		echo "Installing VC++ 2022 Redistributable"
+		WINETRICKS_RUN=${WINETRICKS_RUN/vcrun2022}
+    	
+	 	if [ ! -f "$WINEPREFIX/vcrun2022.exe" ]; then
                 wget -q -O $WINEPREFIX/vcrun2022.exe https://aka.ms/vs/17/release/vc_redist.x64.exe
         fi
 
-    wine msiexec /i "$WINEPREFIX/vcrun2022 " /qn /quiet /norestart /log $WINEPREFIX/vcredist2022_install.log
+    	wine msiexec /i "$WINEPREFIX/vcrun2022.exe" /qn /quiet /norestart /log $WINEPREFIX/vcredist2022_install.log
 fi
 
 # Replace Startup Variables
