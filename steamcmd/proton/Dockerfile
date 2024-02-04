@@ -4,6 +4,7 @@
 FROM        debian:bullseye-slim
 
 LABEL       author="Torsten Widmann" maintainer="info@goover.de"
+LABEL 		org.opencontainers.image.source = "https://github.com/CuteNatalie/yolks"
 
 ## install required packages
 RUN         dpkg --add-architecture i386
